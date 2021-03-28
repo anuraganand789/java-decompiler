@@ -8,6 +8,20 @@ import java.io.IOException;
 
 import constants.ReferenceKind;
 
+import cpinfo.ConstantPoolInfo;
+import cpinfo.MethodRefInfo;
+import cpinfo.Utf8Info;
+import cpinfo.IntegerInfo;
+import cpinfo.ClassInfo;
+import cpinfo.FloatInfo;
+import cpinfo.DoubleInfo;
+import cpinfo.LongInfo;
+import cpinfo.StringInfo;
+import cpinfo.FieldRefInfo;
+import cpinfo.InterfaceMethodRefInfo;
+import cpinfo.MethodHandleInfo;
+import cpinfo.NameAndTypeInfo;
+
 import static constants.ConstantTypes.CONSTANT_Utf8                ;
 import static constants.ConstantTypes.CONSTANT_Integer             ;
 import static constants.ConstantTypes.CONSTANT_Float               ;
@@ -29,8 +43,9 @@ import static constants.ConstantTypes.CONSTANT_Package             ;
 public class JavaDecompiler{
     private static String spacePadding = "                    ";
     
-    private static void printConstantPool(final DataInputStream dataInputStream) throws IOException{
+    private static ConstantPoolInfo[] printConstantPool(final DataInputStream dataInputStream) throws IOException{
         final int numberOfItemsInConstantPool = dataInputStream.readUnsignedShort();
+        final ConstantPoolInfo[] constantPool = new ConstantPoolInfo[numberOfItemsInConstantPool];
         System.out.println("Constant Pool : ");
 
         for(int constantIndex = 1; constantIndex < numberOfItemsInConstantPool; ++constantIndex){
@@ -38,55 +53,129 @@ public class JavaDecompiler{
 
             switch(tag){
             case CONSTANT_MethodRef : 
-                final int method_ref_class_index         = dataInputStream.readUnsignedShort();
-                final int method_ref_name_and_type_index = dataInputStream.readUnsignedShort();
-                System.out.format("#%-2d = MethodRef %s #%d.#%d %n", constantIndex, spacePadding,method_ref_class_index, method_ref_name_and_type_index);
+                final MethodRefInfo 
+                methodRefInfo = new MethodRefInfo(dataInputStream.readUnsignedShort(),
+                                                  dataInputStream.readUnsignedShort());
+
+                constantPool[constantIndex - 1] = methodRefInfo;
+
+                System.out.format("#%-2d = MethodRef %s #%d.#%d %n", 
+                                  constantIndex, 
+                                  spacePadding,
+                                  methodRefInfo.classIndex(),
+                                  methodRefInfo.nameAndTypeIndex());
 
             break;
             case CONSTANT_Utf8 : 
-                System.out.format("#%2d = Utf8 %s %s%n", constantIndex, spacePadding,dataInputStream.readUTF());
+                final Utf8Info utf8Info = new Utf8Info(dataInputStream.readUTF());
+                constantPool[constantIndex - 1] = utf8Info;
+                System.out.format("#%2d = Utf8 %s %s%n", 
+                                  constantIndex, 
+                                  spacePadding,
+                                  utf8Info.utf8Value());
                 break;
             case CONSTANT_Integer : 
-                final int int_value = dataInputStream.readInt();
-                System.out.format("#%2d = Integer %s %d%n", constantIndex, spacePadding, int_value);
+                final IntegerInfo integerInfo   = new IntegerInfo(dataInputStream.readInt());
+                constantPool[constantIndex - 1] = integerInfo;
+
+                System.out.format("#%2d = Integer %s %d%n", 
+                                  constantIndex, 
+                                  spacePadding, 
+                                  integerInfo.intValue());
                 break;
 
             case CONSTANT_Class: 
-                final int class_name_index = dataInputStream.readUnsignedShort();
-                System.out.format("#%2d = Class %s #%d%n", constantIndex, spacePadding, class_name_index);
+                final ClassInfo 
+                classInfo = new ClassInfo(dataInputStream.readUnsignedShort());
+                constantPool[constantIndex - 1] = classInfo;
+
+                System.out.format("#%2d = Class %s #%d%n", 
+                                  constantIndex, 
+                                  spacePadding, 
+                                  classInfo.nameIndex());
                 break;
            case CONSTANT_Float              : 
-                System.out.format("#%2d = Integer %s %f%n", constantIndex, spacePadding, dataInputStream.readFloat());
+                final FloatInfo floatInfo = new FloatInfo(dataInputStream.readFloat());
+                constantPool[constantIndex - 1] = floatInfo;
+
+                System.out.format("#%2d = Float %s %f%n", 
+                                  constantIndex, 
+                                  spacePadding, 
+                                  floatInfo.floatValue());
            break;
            case CONSTANT_Long               : 
-                System.out.format("#%2d = Integer %s %d%n", constantIndex, spacePadding, dataInputStream.readLong());
+                final LongInfo longInfo = new LongInfo(dataInputStream.readLong());
+                constantPool[constantIndex - 1] = longInfo;
+                
+                System.out.format("#%2d = Integer %s %d%n", 
+                                  constantIndex, 
+                                  spacePadding, 
+                                  longInfo.longValue());
            break;
            case CONSTANT_Double             : 
-                System.out.format("#%2d = Integer %s %f%n", constantIndex, spacePadding, dataInputStream.readDouble());
+                final DoubleInfo doubleInfo     = new DoubleInfo(dataInputStream.readDouble());
+                constantPool[constantIndex - 1] = doubleInfo;
+
+                System.out.format("#%2d = Integer %s %f%n", 
+                                  constantIndex, 
+                                  spacePadding, 
+                                  doubleInfo.doubleValue());
            break;
            case CONSTANT_String             : 
-                final int string_index = dataInputStream.readUnsignedShort();
-                System.out.format("#%2d = String %s #%d %n", constantIndex, spacePadding, string_index);
+                final StringInfo 
+                stringInfo = new StringInfo(dataInputStream.readUnsignedShort());
+                constantPool[constantIndex - 1] = stringInfo;
+
+                System.out.format("#%2d = String %s #%d %n", 
+                                  constantIndex, 
+                                  spacePadding, 
+                                  stringInfo.stringIndex());
            break;
            case CONSTANT_Fieldref           : 
-               final int field_ref_class_index = dataInputStream.readUnsignedShort();
-               final int field_ref_name_and_type_index = dataInputStream.readUnsignedShort();
-               System.out.format("#%2d = FieldRef %s #%d.#%d %n", constantIndex, spacePadding, field_ref_class_index, field_ref_name_and_type_index);
+               final FieldRefInfo 
+               fieldRefInfo = new FieldRefInfo(dataInputStream.readUnsignedShort(),
+                                               dataInputStream.readUnsignedShort());
+               constantPool[constantIndex - 1] = fieldRefInfo;
+
+               System.out.format("#%2d = FieldRef %s #%d.#%d %n", 
+                                 constantIndex, 
+                                 spacePadding, 
+                                 fieldRefInfo.classIndex(),
+                                 fieldRefInfo.nameAndTypeIndex());
                break;
            case CONSTANT_InterfaceMethodRef : 
-               final int interface_method_ref_class_index = dataInputStream.readUnsignedShort();
-               final int interface_method_ref_name_and_type_index = dataInputStream.readUnsignedShort();
-               System.out.format("#%2d = InterfaceMethodRef %s #%d.#%d %n", constantIndex, spacePadding, interface_method_ref_class_index, interface_method_ref_name_and_type_index);
+               final InterfaceMethodRefInfo 
+               interfaceMethodRef = new InterfaceMethodRefInfo(dataInputStream.readUnsignedShort(),
+                                                           dataInputStream.readUnsignedShort());
+               constantPool[constantIndex - 1] = interfaceMethodRef;
+               System.out.format("#%2d = InterfaceMethodRef %s #%d.#%d %n", 
+                                 constantIndex, 
+                                 spacePadding, 
+                                 interfaceMethodRef.classIndex(), 
+                                 interfaceMethodRef.nameAndTypeIndex());
                break;
            case CONSTANT_NameAndType        : 
-               final int name_and_type_name_index       = dataInputStream.readUnsignedShort(); 
-               final int name_and_type_descriptor_index = dataInputStream.readUnsignedShort();
-               System.out.format("#%2d = NameAndType %s #%d.#%d %n", constantIndex, spacePadding, name_and_type_name_index, name_and_type_descriptor_index);
+               final NameAndTypeInfo 
+               nameAndType = new NameAndTypeInfo(dataInputStream.readUnsignedShort(), 
+                                                 dataInputStream.readUnsignedShort());
+               constantPool[constantIndex - 1] = nameAndType;
+
+               System.out.format("#%2d = NameAndType %s #%d.#%d %n", 
+                                 constantIndex, 
+                                 spacePadding, 
+                                 nameAndType.nameIndex(), 
+                                 nameAndType.descriptorIndex());
            break;
            case CONSTANT_MethodHandle       : 
-               final int method_handle_reference_kind = dataInputStream.readUnsignedByte();
-               final int method_handle_reference_index = dataInputStream.readUnsignedShort();
-               System.out.format("#%2d = MethodHandle %s #%d.#%d %s %n", constantIndex, spacePadding, method_handle_reference_kind, method_handle_reference_index, ReferenceKind.getKind(method_handle_reference_kind));
+               final MethodHandleInfo 
+               methodHandle = new MethodHandleInfo(dataInputStream.readUnsignedByte(),
+                                                  dataInputStream.readUnsignedShort());
+               System.out.format("#%2d = MethodHandle %s #%d.#%d %s %n", 
+                                 constantIndex, 
+                                 spacePadding, 
+                                 methodHandle.referenceKind(), 
+                                 methodHandle.referenceIndex(),
+                                 ReferenceKind.getKind(methodHandle.referenceKind()));
            break;
 
            case CONSTANT_MethodType         : 
@@ -116,6 +205,7 @@ public class JavaDecompiler{
                 throw new IllegalArgumentException("Invalid constant type found in constant table");
             }
         }
+        return constantPool;
     }
     public static void main(final String ...args){
         if(args.length < 1) { 
@@ -142,7 +232,7 @@ public class JavaDecompiler{
              classFile.majorVersion = dataInputStream.readUnsignedShort();
              System.out.println("Major Version  - " + classFile.majorVersion);
 
-             //printConstantPool(dataInputStream);
+             classFile.constantPool = printConstantPool(dataInputStream);
          } catch(FileNotFoundException ex){
              ex.printStackTrace();
          }catch(IOException ex){

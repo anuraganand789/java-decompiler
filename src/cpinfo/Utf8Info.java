@@ -1,11 +1,10 @@
 package cpinfo;
 
-public class Utf8Info implements ConstantPoolInfo{
-    private final int    tag;
+public final class Utf8Info implements ConstantPoolInfo{
+    private final int    tag = 1;
     private final String utf8Value;
 
-    public Utf8Info(final int tag, final String utf8Value){
-        this.tag = tag;
+    public Utf8Info(final String utf8Value){
         this.utf8Value = utf8Value;
     }
 

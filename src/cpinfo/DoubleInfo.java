@@ -1,25 +1,32 @@
 package cpinfo;
 
-public class DoubleInfo implements ConstantPoolInfo{
-    private final int  tag;
+public final class DoubleInfo implements ConstantPoolInfo{
+    private final int  tag = 6;
     private final double doubleValue;
 
-    public DoubleInfo(final int tag, final double doubleValue){
-        this.tag         = tag;
+    public DoubleInfo(final double doubleValue){
         this.doubleValue = doubleValue;
     }
 
-    public double doubleValue() { return this.doubleValue; }
+    public double doubleValue() { 
+        return doubleValue;
+    }
 
     @Override 
-    public int tag() { return this.tag; } 
+    public int tag() { 
+        return tag; 
+    } 
 
     @Override 
-    public String value() { return this.toString(); }
+    public String value() { 
+        return toString(); 
+    }
 
     @Override
     public String toString(){
-        return String.format("Double %s %d %n", ConstantPoolInfo.SPACE_PADDING, this.doubleValue);
+        return String.format("Double %s %d %n", 
+                              ConstantPoolInfo.SPACE_PADDING, 
+                              doubleValue);
     }
 
 

@@ -1,14 +1,12 @@
 package cpinfo;
 
-public class MethodRefInfo implements ConstantPoolInfo{
-    private int tag;
-    private int classIndex;
-    private int nameAndTypeIndex;
+public final class MethodRefInfo implements ConstantPoolInfo{
+    private final int tag = 10;
+    private final int classIndex;
+    private final int nameAndTypeIndex;
 
-    public MethodRefInfo(final int tag, 
-                         final int classIndex, 
+    public MethodRefInfo(final int classIndex, 
                          final int nameAndTypeIndex){
-        this.tag        = tag;
         this.classIndex = classIndex;
         this.nameAndTypeIndex = nameAndTypeIndex;
     }
