@@ -123,6 +123,8 @@ public class JavaDecompiler{
             return ;
          }
 
+         final ClassFile classFile = new ClassFile();
+
          final File file = new File(args[0]);
          if(!file.exists()) {
              System.out.println("File Does not exists you moron");
@@ -131,10 +133,16 @@ public class JavaDecompiler{
 
          try(final FileInputStream fileInputStream = new FileInputStream(file);
              final DataInputStream dataInputStream = new DataInputStream(fileInputStream)){
-             System.out.println("magic - " + dataInputStream.readInt());
-             System.out.println("MinorVersion   - " + dataInputStream.readUnsignedShort());
-             System.out.println("Major Version  - " + dataInputStream.readUnsignedShort());
-             printConstantPool(dataInputStream);
+             classFile.magicNumber = dataInputStream.readInt();
+             System.out.println("magic - " + classFile.magicNumber);
+
+             classFile.minorVersion = dataInputStream.readUnsignedShort();
+             System.out.println("Minor Version   - " + classFile.minorVersion);
+
+             classFile.majorVersion = dataInputStream.readUnsignedShort();
+             System.out.println("Major Version  - " + classFile.majorVersion);
+
+             //printConstantPool(dataInputStream);
          } catch(FileNotFoundException ex){
              ex.printStackTrace();
          }catch(IOException ex){
