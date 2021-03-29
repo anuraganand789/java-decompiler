@@ -1,6 +1,7 @@
 package test;
 
-public class Test{
+public class Test implements Runnable{
+    private final int testNumber = 100;
     public static void main(final String ...args){
         final String name = "Anurag";
         final float floatValue = 12;
@@ -20,4 +21,9 @@ public class Test{
     }
 
     record Pair(int x, int y){}
+    
+    @Override
+    public void run() { 
+        System.out.println("just a test");
+     }
 }
