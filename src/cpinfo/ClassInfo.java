@@ -9,23 +9,24 @@ public final class ClassInfo implements ConstantPoolInfo{
     }
 
     public int nameIndex() { 
-        return this.nameIndex;
+        return nameIndex;
     }
 
     @Override
     public int tag() {
-        return this.tag;
+        return tag;
     }
 
     @Override
     public String value(){
-        return this.toString();
+        return toString();
     }
 
     @Override
     public String toString(){
-        return String.format("Class %s %d.%n", 
-                          ConstantPoolInfo.SPACE_PADDING
+        return String.format("Class %s #%d.%n", 
+                          ConstantPoolInfo.SPACE_PADDING,
+                          nameIndex
                           );
     }
 }

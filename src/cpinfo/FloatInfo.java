@@ -22,7 +22,7 @@ public class FloatInfo implements ConstantPoolInfo{
 
     @Override
     public String toString(){
-        return String.format("Float %s %d %n", 
+        return String.format("Float %s %.2f %n", 
                              ConstantPoolInfo.SPACE_PADDING, 
                              this.floatValue);
     }

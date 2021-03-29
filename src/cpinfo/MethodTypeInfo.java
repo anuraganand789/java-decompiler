@@ -1,21 +1,26 @@
 package cpinfo;
 
 public class MethodTypeInfo implements ConstantPoolInfo {
-    private final int tag;
+    private final int tag = 16;
     private final int descriptorIndex;
 
-    public MethodTypeInfo(final int tag, final int descriptorIndex){
-        this.tag = tag;
+    public MethodTypeInfo(final int descriptorIndex){
         this.descriptorIndex = descriptorIndex;
     }
 
-    public int descriptorIndex() { return this.descriptorIndex; }
+    public int descriptorIndex() { 
+        return descriptorIndex; 
+    }
 
     @Override
-    public int tag() { return this.tag; }
+    public int tag() { 
+        return tag; 
+    }
     
     @Override
-    public String value(){ return this.toString(); }
+    public String value(){ 
+        return toString(); 
+    }
 
     @Override
     public String toString() { 
