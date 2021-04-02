@@ -14,4 +14,5 @@ public class ClassFile{
     public int                thisClass;
     public int                superClass;
     public int                interfacesCount;
+    public int[]              interfaces;
 }
