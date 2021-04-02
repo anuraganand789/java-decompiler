@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import constants.ReferenceKind;
+import constants.AccessFlags;
 
 import cpinfo.ClassInfo;
 import cpinfo.ConstantPoolInfo;
@@ -50,9 +51,9 @@ import static constants.ConstantTypes.CONSTANT_Utf8                ;
 public class JavaDecompiler{
     private static String spacePadding = "                    ";
     
-    private static ConstantPoolInfo[] printConstantPool(final DataInputStream dataInputStream) throws IOException{
-        final int numberOfItemsInConstantPool = dataInputStream.readUnsignedShort();
-        final ConstantPoolInfo[] constantPool = new ConstantPoolInfo[numberOfItemsInConstantPool - 1];
+    private static void readConstantPool(final ClassFile classFile, final DataInputStream dataInputStream) throws IOException{
+        final int numberOfItemsInConstantPool = classFile.constantPoolCount = dataInputStream.readUnsignedShort();
+        final ConstantPoolInfo[] constantPool = classFile.constantPool      = new ConstantPoolInfo[numberOfItemsInConstantPool - 1];
         System.out.println("Constant Pool : ");
 
         for(int constantIndex = 1; constantIndex < numberOfItemsInConstantPool; ++constantIndex){
@@ -153,7 +154,14 @@ public class JavaDecompiler{
                 throw new IllegalArgumentException("Invalid constant type found in constant table");
             }
         }
-        return constantPool;
+    }
+
+    private static void interfaces(final ClassFile classFile, final DataInputStream dataInputStream) throws IOException{
+        final int   interfacesCount = classFile.interfacesCount = dataInputStream.readUnsignedShort();
+        final int[] interfaces      = classFile.interfaces      = new int[interfacesCount];
+        for(int index = 0 ; index < interfacesCount; ++index){
+            interfaces[index] = dataInputStream.readUnsignedShort();
+        }
     }
     public static void main(final String ...args){
         if(args.length < 1) { 
@@ -184,12 +192,12 @@ public class JavaDecompiler{
              classFile.minorVersion = dataInputStream.readUnsignedShort();
              classFile.majorVersion = dataInputStream.readUnsignedShort();
 
-             classFile.constantPool = printConstantPool(dataInputStream);
+             readConstantPool(classFile, dataInputStream);
 
              classFile.accessFlags = dataInputStream.readUnsignedShort();
              classFile.thisClass   = dataInputStream.readUnsignedShort();
              classFile.superClass  = dataInputStream.readUnsignedShort();
-             classFile.interfacesCount = dataInputStream.readUnsignedShort();
+             interfaces(classFile, dataInputStream);
 
          } catch(FileNotFoundException ex){
              ex.printStackTrace();
@@ -203,7 +211,9 @@ public class JavaDecompiler{
          System.out.println("Class");
          System.out.format(" minor version: %d%n", classFile.minorVersion);
          System.out.format(" major version: %d%n", classFile.majorVersion);
-         System.out.format(" flags : (%d) %n",     classFile.accessFlags);
+         System.out.format(" flags : (0x%04x) %s %n" , 
+                           classFile.accessFlags,
+                           AccessFlags.accessFlags(classFile.accessFlags));
 
          final ClassInfo classInfoThisClass = (ClassInfo) classFile.constantPool[classFile.thisClass - 1];
          final Utf8Info thisClassUtf8       = (Utf8Info)  classFile.constantPool[classInfoThisClass.nameIndex() - 1];
