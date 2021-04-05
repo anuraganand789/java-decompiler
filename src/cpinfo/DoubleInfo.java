@@ -8,25 +8,19 @@ public final class DoubleInfo implements ConstantPoolInfo{
         this.doubleValue = doubleValue;
     }
 
-    public double doubleValue() { 
-        return doubleValue;
-    }
+    public double doubleValue() { return doubleValue; }
 
-    @Override 
-    public int tag() { 
-        return tag; 
-    } 
+    @Override public int tag() { return tag; } 
 
-    @Override 
-    public String value() { 
-        return toString(); 
-    }
+    @Override public String value() { return toString(); }
+
+    @Override public String utf8(){ return String.valueOf(doubleValue); }
 
     @Override
     public String toString(){
-        return String.format("Double %s %d %n", 
-                              ConstantPoolInfo.SPACE_PADDING, 
-                              doubleValue);
+        return String.format("%-19s %d", 
+                             "Double", 
+                             doubleValue);
     }
 
 

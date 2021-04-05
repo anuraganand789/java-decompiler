@@ -8,17 +8,22 @@ public final class Utf8Info implements ConstantPoolInfo{
         this.utf8Value = utf8Value;
     }
 
-    public String utf8Value() { return this.utf8Value; }
+    public String utf8Value() { return utf8Value; }
+
+    @Override public String utf8() { return utf8Value; }
 
     @Override
-    public int tag() { return this.tag; }
+    public int tag() { return tag; }
 
     @Override
-    public String value() { return this.toString(); }
+    public String value() { return toString(); }
 
     @Override
     public String toString(){
-        return String.format("UTF8 %s %s %n", ConstantPoolInfo.SPACE_PADDING, utf8Value);
+        return 
+        String.format("%-19s %s", 
+                      "UTF8",
+                      utf8Value);
     }
 }
 

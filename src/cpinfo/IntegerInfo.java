@@ -8,19 +8,22 @@ public final class IntegerInfo implements ConstantPoolInfo{
         this.intValue = intValue;
     }
 
-    public int intValue() { return this.intValue; }
+    public int intValue() { return intValue; }
+
+    @Override
+    public String utf8(){ return String.valueOf(intValue); }
 
     @Override 
-    public int tag() { return this.tag; } 
+    public int tag() { return tag; } 
 
     @Override 
-    public String value() { return this.toString(); }
+    public String value() { return toString(); }
 
     @Override
     public String toString(){
-        return String.format("Integer %s %d %n", 
-                             ConstantPoolInfo.SPACE_PADDING, 
-                             this.intValue);
+        return String.format("%-19s %d", 
+                             "Integer",
+                             intValue);
     }
 
 

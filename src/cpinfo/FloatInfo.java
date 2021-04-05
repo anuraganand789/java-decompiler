@@ -8,23 +8,20 @@ public class FloatInfo implements ConstantPoolInfo{
         this.floatValue = floatValue;
     }
 
-    public float floatValue(){
-        return this.floatValue;
-    }
+    public float floatValue(){ return floatValue; }
 
-    @Override public int tag() { 
-        return this.tag; 
-    } 
+    @Override public String utf8() { return String.valueOf(floatValue); }
 
-    @Override public String value() { 
-        return this.toString(); 
-    }
+    @Override public int tag() { return tag; } 
+
+    @Override public String value() { return toString(); }
 
     @Override
     public String toString(){
-        return String.format("Float %s %.2f %n", 
-                             ConstantPoolInfo.SPACE_PADDING, 
-                             this.floatValue);
+        return 
+        String.format("%-19s %.2f", 
+                      "Float",
+                      floatValue);
     }
 
 

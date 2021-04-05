@@ -1,5 +1,7 @@
 package cpinfo;
 
+import classfile.ClassFile;
+
 public final class LongInfo implements ConstantPoolInfo{
     private final int  tag = 5;
     private final long longValue;
@@ -8,25 +10,20 @@ public final class LongInfo implements ConstantPoolInfo{
         this.longValue = longValue;
     }
 
-    public long longValue() { 
-        return longValue; 
-    }
+    public long longValue() { return longValue; }
 
-    @Override 
-    public int tag() { 
-        return tag; 
-    } 
+    @Override public String utf8() { return String.valueOf(longValue); }
 
-    @Override 
-    public String value() { 
-        return toString(); 
-    }
+    @Override public int tag() { return tag; } 
+
+    @Override public String value() { return toString(); }
 
     @Override
     public String toString(){
-        return String.format("Long %s %d %n", 
-                              ConstantPoolInfo.SPACE_PADDING, 
-                              longValue);
+        return 
+        String.format("%-19s %d", 
+                      "Long",
+                      longValue);
     }
 
 
