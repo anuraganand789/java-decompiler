@@ -89,6 +89,7 @@ public class Functions{
                           classFile.lastModified,
                           classFile.fileLength);
 
+        System.out.format("  SHA-256 checksum %s %n", classFile.sha256);
         System.out.format("  Compiled From \"%s.java\"%n", classHierarchy.substring(classHierarchy.indexOf("/") + 1));
         System.out.println("Class");
         System.out.format("  minor version: %d%n", classFile.minorVersion);
@@ -135,5 +136,28 @@ public class Functions{
                              );
         }
         System.out.println();
+    }
+
+    public static void interfaces(final ClassFile classFile, final DataInputStream dataInputStream) throws IOException{
+        final int   interfacesCount = classFile.interfacesCount = dataInputStream.readUnsignedShort();
+        final int[] interfaces      = classFile.interfaces      = new int[interfacesCount];
+        for(int index = 0 ; index < interfacesCount; ++index){
+            interfaces[index] = dataInputStream.readUnsignedShort();
+        }
+    }
+
+    public static String sha256(final byte[] hash) {
+        try{
+            final StringBuilder hexString = new StringBuilder();
+            for (int i = 0; i < hash.length; i++) {
+                final String hex = Integer.toHexString(0xff & hash[i]);
+                if(hex.length() == 1) 
+                  hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch(Exception ex){
+           throw new RuntimeException(ex);
+        }
     }
 }
