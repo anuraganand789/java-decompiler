@@ -1,20 +1,12 @@
 package cpinfo;
 
-public final class IntegerInfo implements ConstantPoolInfo{
-    private final int tag = 3;
-    private final int intValue;
-
-    public IntegerInfo(final int intValue){
-        this.intValue = intValue;
-    }
-
-    public int intValue() { return intValue; }
+public record IntegerInfo(int intValue) implements ConstantPoolInfo{
 
     @Override
     public String utf8(){ return String.valueOf(intValue); }
 
     @Override 
-    public int tag() { return tag; } 
+    public int tag() { return 3; } 
 
     @Override 
     public String value() { return toString(); }

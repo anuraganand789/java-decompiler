@@ -1,18 +1,10 @@
 package cpinfo;
 
-public class FloatInfo implements ConstantPoolInfo{
-    private final int   tag = 4;
-    private final float floatValue;
-
-    public FloatInfo(final float floatValue){
-        this.floatValue = floatValue;
-    }
-
-    public float floatValue(){ return floatValue; }
+public record FloatInfo(float floatValue) implements ConstantPoolInfo{
 
     @Override public String utf8() { return String.valueOf(floatValue); }
 
-    @Override public int tag() { return tag; } 
+    @Override public int tag() { return 4; } 
 
     @Override public String value() { return toString(); }
 

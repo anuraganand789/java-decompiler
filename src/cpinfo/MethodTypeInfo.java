@@ -2,25 +2,15 @@ package cpinfo;
 
 import classfile.ClassFile;
 
-public class MethodTypeInfo implements ConstantPoolInfo {
-    private final int tag = 16;
-    private final int descriptorIndex;
-    private final ClassFile classFile;
-
-    public MethodTypeInfo(final int descriptorIndex,
-                          final ClassFile classFile){
-        this.descriptorIndex = descriptorIndex;
-        this.classFile       = classFile;
-    }
-
-    public int descriptorIndex() { return descriptorIndex; }
+public record MethodTypeInfo(int descriptorIndex, 
+                             ClassFile classFile) implements ConstantPoolInfo {
 
     @Override
     public String utf8() { 
         return classFile.constantPool[descriptorIndex].utf8();
     }
 
-    @Override public int tag() { return tag; }
+    @Override public int tag() { return 16; }
     
     @Override public String value(){ return toString(); }
 

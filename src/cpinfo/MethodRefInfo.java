@@ -2,23 +2,9 @@ package cpinfo;
 
 import classfile.ClassFile;
 
-public final class MethodRefInfo implements ConstantPoolInfo{
-    private final int tag = 10;
-    private final int classIndex;
-    private final int nameAndTypeIndex;
-    private final ClassFile classFile;
-
-    public MethodRefInfo(final int classIndex, 
-                         final int nameAndTypeIndex,
-                         final ClassFile classFile){
-        this.classIndex = classIndex;
-        this.nameAndTypeIndex = nameAndTypeIndex;
-        this.classFile = classFile;
-    }
-
-    public int classIndex() { return  this.classIndex; }
-
-    public int nameAndTypeIndex() { return this.nameAndTypeIndex; } 
+public record MethodRefInfo(int classIndex,
+                            int nameAndTypeIndex,
+                            ClassFile classFile) implements ConstantPoolInfo{
 
     @Override 
     public String utf8() { 
@@ -29,7 +15,7 @@ public final class MethodRefInfo implements ConstantPoolInfo{
                      );
     }  
 
-    @Override public int tag(){ return this.tag; } 
+    @Override public int tag(){ return 10; } 
 
     @Override public String value(){ return this.toString(); }
 

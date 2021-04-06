@@ -2,19 +2,11 @@ package cpinfo;
 
 import classfile.ClassFile;
 
-public final class LongInfo implements ConstantPoolInfo{
-    private final int  tag = 5;
-    private final long longValue;
-
-    public LongInfo(final long longValue){
-        this.longValue = longValue;
-    }
-
-    public long longValue() { return longValue; }
+public record LongInfo(long longValue) implements ConstantPoolInfo{
 
     @Override public String utf8() { return String.valueOf(longValue); }
 
-    @Override public int tag() { return tag; } 
+    @Override public int tag() { return 5; } 
 
     @Override public String value() { return toString(); }
 

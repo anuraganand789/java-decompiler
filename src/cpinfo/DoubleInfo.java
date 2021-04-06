@@ -1,16 +1,8 @@
 package cpinfo;
 
-public final class DoubleInfo implements ConstantPoolInfo{
-    private final int  tag = 6;
-    private final double doubleValue;
+public record DoubleInfo(double doubleValue) implements ConstantPoolInfo{
 
-    public DoubleInfo(final double doubleValue){
-        this.doubleValue = doubleValue;
-    }
-
-    public double doubleValue() { return doubleValue; }
-
-    @Override public int tag() { return tag; } 
+    @Override public int tag() { return 6; } 
 
     @Override public String value() { return toString(); }
 

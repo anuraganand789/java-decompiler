@@ -2,20 +2,9 @@ package cpinfo;
 
 import classfile.ClassFile;
 
-public final class ClassInfo implements ConstantPoolInfo{
-    private final int tag = 7;
-    private final int nameIndex;
-    private final ClassFile classFile;
+public record ClassInfo(int nameIndex, ClassFile classFile) implements ConstantPoolInfo{
 
-    public ClassInfo(final int nameIndex,
-                     final ClassFile classFile){
-        this.nameIndex = nameIndex;
-        this.classFile = classFile;
-    }
-
-    public int nameIndex() { return nameIndex; }
-
-    @Override public int tag() { return tag; }
+    @Override public int tag() { return 7; }
 
     @Override public String value(){ return toString(); }
 

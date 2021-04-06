@@ -2,25 +2,11 @@ package cpinfo;
 
 import classfile.ClassFile;
 
-public class DynamicInfo implements ConstantPoolInfo{
-    private final int tag = 17;
-    private final int bootstrapMethodAttributeIndex;
-    private final int nameAndTypeIndex;
-    private final ClassFile classFile;
+public record DynamicInfo(int bootstrapMethodAttributeIndex, 
+                          int nameAndTypeIndex,
+                          ClassFile classFile) implements ConstantPoolInfo{
 
-    public DynamicInfo(final int bootstrapMethodAttributeIndex, 
-                       final int nameAndTypeIndex,
-                       final ClassFile classFile){
-        this.bootstrapMethodAttributeIndex = bootstrapMethodAttributeIndex;
-        this.nameAndTypeIndex = nameAndTypeIndex;
-        this.classFile = classFile;
-    }
-
-    public int bootstrapMethodAttributeIndex() { return bootstrapMethodAttributeIndex; }
-
-    public int nameAndTypeIndex() { return nameAndTypeIndex; }
-
-    @Override public int tag() { return tag; }
+    @Override public int tag() { return 17; }
 
     @Override public String utf8(){
         return 

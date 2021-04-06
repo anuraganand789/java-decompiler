@@ -2,23 +2,13 @@ package cpinfo;
 
 import classfile.ClassFile;
 
-public class ModuleInfo implements ConstantPoolInfo{
-    private final int tag = 19;
-    private final int nameIndex;
-    private final ClassFile classFile;
-
-    public ModuleInfo(final int nameIndex,
-                      final ClassFile classFile){
-        this.nameIndex = nameIndex;
-        this.classFile = classFile;
-    }
-
-    public int nameIndex(){ return nameIndex; }
+public record ModuleInfo(int nameIndex, 
+                         ClassFile classFile) implements ConstantPoolInfo{
 
     @Override
     public String utf8(){ return classFile.constantPool[nameIndex].utf8(); }
 
-    @Override public int tag() { return tag; }
+    @Override public int tag() { return 19; }
 
     @Override public String value(){ return toString(); }
 
