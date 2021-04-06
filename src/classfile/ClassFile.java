@@ -7,6 +7,8 @@ public class ClassFile{
     public String absolutePath;
     public Date lastModified;
     public long fileLength;
+    public String sha256;
+
 
     //#CAFEBABE
     public int                magicNumber;
