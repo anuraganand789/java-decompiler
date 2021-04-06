@@ -1,12 +1,17 @@
 import java.io.DataInputStream;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
 import java.io.IOException;
 
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import java.util.Date;
+import java.util.Base64;
 
 import classfile.ClassFile;
 
@@ -16,14 +21,7 @@ import cpinfo.Utf8Info;
 
 
 public class JavaDecompiler{
-    private static void interfaces(final ClassFile classFile, final DataInputStream dataInputStream) throws IOException{
-        final int   interfacesCount = classFile.interfacesCount = dataInputStream.readUnsignedShort();
-        final int[] interfaces      = classFile.interfaces      = new int[interfacesCount];
-        for(int index = 0 ; index < interfacesCount; ++index){
-            interfaces[index] = dataInputStream.readUnsignedShort();
-        }
-    }
-    public static void main(final String ...args){
+    public static void main(final String ...args) throws NoSuchAlgorithmException{
         if(args.length < 1) { 
             System.out.println("Provide a class name"); 
             return ;
@@ -37,8 +35,20 @@ public class JavaDecompiler{
              return ;
          }
 
-         try(final FileInputStream fileInputStream = new FileInputStream(file);
-             final DataInputStream dataInputStream = new DataInputStream(fileInputStream)){
+         byte[] classData = null;
+         try( final FileInputStream fileInputStream     = new FileInputStream(file)){
+             classData        = fileInputStream.readAllBytes();
+             //classFile.sha256 = Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-256").digest(classData));
+             classFile.sha256 = Functions.sha256(MessageDigest.getInstance("SHA-256").digest(classData));
+         }catch(FileNotFoundException ex) {
+             ex.printStackTrace();
+         } catch(IOException ex){
+             ex.printStackTrace();
+         }
+
+         if(classData == null) return;
+
+         try( final DataInputStream dataInputStream = new DataInputStream(new ByteArrayInputStream(classData)); ){
              classFile.magicNumber = dataInputStream.readInt();
              if(classFile.magicNumber != 0xCAFEBABE) {
                  throw new IllegalArgumentException("Invalid Class File");
@@ -55,11 +65,9 @@ public class JavaDecompiler{
              classFile.accessFlags = dataInputStream.readUnsignedShort();
              classFile.thisClass   = dataInputStream.readUnsignedShort();
              classFile.superClass  = dataInputStream.readUnsignedShort();
-             interfaces(classFile, dataInputStream);
+             Functions.interfaces(classFile, dataInputStream);
 
-         } catch(FileNotFoundException ex){
-             ex.printStackTrace();
-         }catch(IOException ex){
+         } catch(IOException ex){
              ex.printStackTrace();
          }
 
